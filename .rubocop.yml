@@ -1,0 +1,9 @@
+inherit_gem:
+  publishing_platform_rubocop:
+    - config/default.yml
+    - config/rails.yml
+    - config/rspec.yml
+
+inherit_mode:
+  merge:
+    - Exclude

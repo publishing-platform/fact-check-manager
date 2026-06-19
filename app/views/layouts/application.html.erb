@@ -1,0 +1,36 @@
+<%= render "publishing_platform_publishing_components/components/layout", {
+  title: "#{yield(:browser_title).presence || yield(:title)} - Publishing Platform Publisher",
+  logo_text: "Fact Check Manager",
+  navigation_items:
+} do %>
+
+  <% if yield(:back_link).present? %>
+    <%= yield(:back_link) %>
+  <% elsif yield(:breadcrumbs).present? %>
+    <%= yield(:breadcrumbs) %>
+  <% end %>    
+  <% if flash["notice"].present? %>
+    <p class="alert alert-primary"><%= notice %></p>
+  <% end %>
+  <% if flash["alert"].present? %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+
+  <div class="row">
+    <div class="col-xs-12 <%= yield(:top_right).present? ? 'col-md-6' : 'col-md-8' %>">
+      <% if yield(:title).present? %>      
+        <div class="pb-md-4">
+          <%= yield(:context) %>
+          <h1><%= yield(:title) %></h1>
+        </div>  
+      <% end %>             
+    </div>
+    <% if yield(:top_right).present? %>
+      <div class="col-xs-12 col-md-6">
+        <%= yield(:top_right) %>
+      </div>
+    <% end %>             
+  </div>  
+
+  <%= yield %>
+<% end %>

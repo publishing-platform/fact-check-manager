@@ -1,0 +1,23 @@
+@import "publishing_platform_publishing_components/all_components";
+
+.container {
+  max-width: 960px;
+}
+
+.index-button-group {
+  @include media-breakpoint-up(sm) {
+    float: right;
+  }
+}
+
+.btn {
+  @include media-breakpoint-down(sm) {
+    width: 100%;
+  }  
+}
+
+.app-btn--link {
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
