@@ -5,4 +5,8 @@ class User < ApplicationRecord
   has_many :collaborations
   has_many :requests, through: :collaborations
   has_many :responses
+
+  def publishing_platform_admin?
+    permissions.include?("publishing_platform_admin")
+  end
 end

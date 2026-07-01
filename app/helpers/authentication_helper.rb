@@ -1,0 +1,65 @@
+module AuthenticationHelper
+  def check_permissions(user, request)
+    return true if user.publishing_platform_admin? || request.users.include?(current_user)
+
+    raise PublishingPlatform::SSO::PermissionDeniedError, "You do not have permission to see this page."
+  end
+
+  def draft_origin_preview_url(request)
+    return nil if request.draft_auth_bypass_id.blank? || request.draft_content_id.blank? || request.draft_slug.blank?
+
+    "#{PublishingPlatformLocation.external_url_for('draft-origin')}/#{request.draft_slug}?token=#{draft_origin_preview_jwt_token(request)}"
+  end
+
+  def generate_compare_link(request)
+    PublishingPlatformLocation.external_url_for("fact-check-manager") + compare_path(request.source_app, request.source_id)
+  end
+
+  def generate_compare_preview_link(request)
+    "#{generate_compare_link(request)}?token=#{compare_preview_jwt_token(request)}"
+  end
+
+  def valid_compare_preview_jwt?(jwt_token, request)
+    decoded_token = JWT.decode(jwt_token, jwt_auth_secret, true, {
+      verify_expiration: true,
+      verify_sub: true,
+      sub: request.auth_bypass_id,
+      algorithm: "HS256",
+    })
+    token_matches_request?(decoded_token, request)
+  rescue JWT::VerificationError, JWT::ExpiredSignature, JWT::InvalidSubError, JWT::DecodeError, JWT::Base64DecodeError, JWT::IncorrectAlgorithm => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    false
+  end
+
+protected
+
+  def draft_origin_preview_jwt_token(request)
+    payload = {
+      "sub" => request.draft_auth_bypass_id,
+      "content_id" => request.draft_content_id,
+      "iat" => Time.zone.now.to_i,
+      "exp" => 1.month.from_now.to_i,
+    }
+    JWT.encode(payload, jwt_auth_secret, "HS256")
+  end
+
+  def compare_preview_jwt_token(request)
+    payload = {
+      "source_app" => request.source_app,
+      "source_id" => request.source_id,
+      "sub" => request.auth_bypass_id,
+      "iat" => Time.zone.now.to_i,
+      "exp" => 1.month.from_now.to_i,
+    }
+    JWT.encode(payload, jwt_auth_secret, "HS256")
+  end
+
+  def jwt_auth_secret
+    Rails.application.credentials.jwt_auth_secret
+  end
+
+  def token_matches_request?(decoded_jwt_token, request)
+    decoded_jwt_token[0].slice("source_app", "source_id") == request.slice(:source_app, :source_id).stringify_keys
+  end
+end

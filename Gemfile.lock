@@ -90,6 +90,8 @@ GEM
     brakeman (8.0.5)
       racc
     builder (3.3.0)
+    byebug (13.0.0)
+      reline (>= 0.6.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -277,6 +279,12 @@ GEM
       sentry-rails (>= 5.3, < 7.0)
       sentry-ruby (~> 5.3)
     publishing_platform_location (0.4.5)
+    publishing_platform_nokodiff (0.2.0)
+      actionview (>= 6, < 8.1.4)
+      byebug
+      diff-lcs
+      rails (>= 6, < 8.1.4)
+      view_component (~> 4)
     publishing_platform_publishing_components (0.9.3)
       kramdown
       publishing_platform_app_config
@@ -491,6 +499,10 @@ GEM
     uri (1.1.1)
     useragent (0.16.11)
     version_gem (1.1.12)
+    view_component (4.12.0)
+      actionview (>= 7.1.0)
+      activesupport (>= 7.1.0)
+      concurrent-ruby (~> 1)
     warden (1.2.9)
       rack (>= 2.0.9)
     warden-oauth2 (0.0.1)
@@ -532,6 +544,7 @@ DEPENDENCIES
   publishing_platform_api_adapters
   publishing_platform_app_config
   publishing_platform_location
+  publishing_platform_nokodiff
   publishing_platform_publishing_components
   publishing_platform_rubocop
   publishing_platform_sidekiq
