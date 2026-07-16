@@ -1,0 +1,4 @@
+en:
+  fact_check_mailer:
+    new_fact_check_request_email:
+      subject: "Fact check required: %{title}"

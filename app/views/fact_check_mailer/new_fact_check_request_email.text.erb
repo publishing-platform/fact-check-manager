@@ -1,0 +1,15 @@
+Hi,
+
+We need you to check the factual accuracy of changes made to ‘<%= @request.source_title %>’ before it’s published on the Publishing Platform.
+
+<%- if @request.reason_for_change.present? -%>
+The Content Team made the changes because: 
+<%= @request.reason_for_change %>
+<%- end -%>
+
+Deadline: <%= @request.formatted_deadline %>
+
+Preview the changes:
+<%= @compare_link %>
+
+Thank you.

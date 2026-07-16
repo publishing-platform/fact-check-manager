@@ -1,24 +1,34 @@
 class FactCheckComparisonController < ApplicationController
+  include AuthenticationHelper
+
   before_action :authenticate_user!, unless: :token_bypass?, only: :compare
+  before_action :set_request, only: :compare
+  before_action :check_already_responded, only: :compare
 
   def compare
-    @request = Request.most_recent_for_source(source_app: params[:source_app], source_id: params[:source_id])
-    raise ActiveRecord::RecordNotFound, "No request found" unless @request
-
     return unless token_bypass? || check_permissions(current_user, @request)
 
     @current_content = @request.current_content.deep_symbolize_keys
-    @previous_content = @request.previous_content&.deep_symbolize_keys.presence || @current_content.deep_dup
-
-    # TODO: - remove debugging code below
-    # @current_content = { first_part: { heading: "Body", body: "<h1>This is an updated heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel velit orci. Nullam in turpis dictum, scelerisque sem nec, mollis nisi. Vivamus aliquet pellentesque dapibus. Aliquam erat volutpat.</p><h2>Sub-heading here</h2><p>Phasellus porttitor et orcix vitae faucibus. Mauris at leo quis velit tempor faucibus. Nulla gravida auctor magna maximus vulputate. Etiam eget placerat mauris.</p>" }, third_part: { heading: "Bodyy", body: "<h1>This is an updated heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel velit orci. Nullam in turpis dictum, scelerisque sem nec, mollis nisi. Vivamus aliquet pellentesque dapibus. Aliquam erat volutpat.</p><h2>Sub-heading here</h2><p>Phasellus porttitor et orcix vitae faucibus. Mauris at leo quis velit tempor faucibus. Nulla gravida auctor magna maximus vulputate. Etiam eget placerat mauris.</p>" } }
-    # @previous_content = { first_part: { heading: "Body", body: "<h1>This is a heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel velit orci. Nullam in turpis dictum, scelerisque sem nec, mollis nisi. Vivamus aliquet pellentesque dapibus. Aliquam erat volutpat.</p><h2>Sub-heading here</h2><p>Phasellus porttitor et orci vitae faucibus. Mauris at leo quis velit tempor faucibus. Nulla gravida auctor magna maximus vulputate. Etiam eget placerat mauris.</p>" }, second_part: { heading: "Bodyx", body: "<h1>This is an updated heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vel velit orci. Nullam in turpis dictum, scelerisque sem nec, mollis nisi. Vivamus aliquet pellentesque dapibus. Aliquam erat volutpat.</p><h2>Sub-heading here</h2><p>Phasellus porttitor et orcix vitae faucibus. Mauris at leo quis velit tempor faucibus. Nulla gravida auctor magna maximus vulputate. Etiam eget placerat mauris.</p>" } }
+    # First editions have no previous version, so diff current content against
+    # a copy of itself - the diff renders as unchanged.
+    @previous_content = @request.first_edition? ? @current_content.deep_dup : @request.previous_content.deep_symbolize_keys
 
     mark_current_content
     @differ = create_diff
   end
 
 private
+
+  def set_request
+    @request = Request.most_recent_for_source(source_app: params[:source_app], source_id: params[:source_id])
+    raise ActiveRecord::RecordNotFound, "No request found" unless @request
+  end
+
+  def check_already_responded
+    return if @request.response.blank?
+
+    render "fact_check_already_submitted"
+  end
 
   def mark_current_content
     # Both have a single content block, we can diff it directly

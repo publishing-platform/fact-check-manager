@@ -1,0 +1,6 @@
+en:
+  mailer:
+    app_name: "Publishing Platform Fact Check Manager %{instance_name}"
+    email_from_address:
+      instance: "no-reply-fact-check-manager-%{instance_name}@publishing-platform.co.uk"
+      no-instance: "no-reply-fact-check-manager@publishing-platform.co.uk"
