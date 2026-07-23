@@ -1,0 +1,14 @@
+.app-sidebar {
+  .btn {
+    width: 100%;
+  }
+
+  @include media-breakpoint-down(sm) {
+    margin-top: 1rem;
+  }    
+  
+  border-top: 2px solid $primary;
+  padding-top: 15px;
+  position: sticky;
+  top: 10px;
+}

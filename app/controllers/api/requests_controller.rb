@@ -2,8 +2,7 @@ module Api
   class RequestsController < Api::BaseController
     include AuthenticationHelper
 
-    def create
-    end
+    def create; end
 
   private
 

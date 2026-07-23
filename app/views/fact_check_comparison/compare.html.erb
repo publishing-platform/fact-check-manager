@@ -1,3 +1,52 @@
-<% @differ.each do |heading, content| %>
-  <%= render "comparison_diff_block", heading: heading, content: content %>
-<% end %>
+<% content_for :browser_title, @request.source_title %>
+<% content_for :context, @request.source_title %>
+<% content_for :title, t("fact_check_comparison.heading") %>
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">    
+    <% unless current_user.nil? %>
+      <p>The Publishing Platform lead in each department is responsible for co-ordinating and submitting fact check responses. Only one fact check response can be submitted</p>
+
+      <% if current_user.publishing_platform_admin? || @request.users.include?(current_user) %>        
+
+        <%= render "publishing_platform_publishing_components/components/inset_text", {} do %>
+          <%= t "fact_check_comparison.respond_by" %> <span><strong><%= @request.formatted_deadline %></strong></span>
+        <% end %>    
+
+        <%= link_to t("fact_check_comparison.respond_to_button"),  
+              respond_path(source_app: @request.source_app, source_id: @request.source_id),
+              class: "btn btn-primary mb-5" %>
+      <% else %>
+        <%= render "publishing_platform_publishing_components/components/inset_text", {
+          text: "Only the person coordinating the fact check can submit it.",
+        } %>
+      <% end %>      
+    <% end %>
+
+    <% @differ.each do |heading, content| %>
+      <%= render "comparison_diff_block", heading: heading, content: content %>
+    <% end %>    
+  </div>
+  <div class="col-xs-12 col-md-4"> 
+    <div class="app-sidebar">
+      <% if @draft_url %>
+        <h2 class="h6"><%= t("fact_check_comparison.preview_heading") %></h2>
+
+        <p><%= link_to t("fact_check_comparison.preview_link"), @draft_url, target: :_blank, rel: :noopener %></p>
+        <p><%= t("fact_check_comparison.preview_link_expiry") %></p>
+
+        <hr />
+      <% end %>
+      <h2 class="h6"><%= t("fact_check_comparison.guidance_heading") %></h2>
+
+      <% if @request.first_edition? %>
+        <p><%= t("fact_check_comparison.guidance_first_edition") %></p>
+      <% else %>
+      <ul>
+        <li><%= t("fact_check_comparison.guidance_deleted") %></li>
+        <li><%= t("fact_check_comparison.guidance_added") %></li>
+      </ul>
+      <% end %>
+    </div>    
+  </div>  
+</div>

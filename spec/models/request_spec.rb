@@ -118,7 +118,7 @@ RSpec.describe Request, type: :model do
       request_2 = create(:request, source_id: shared_id, requester_email: "bob@publishing-platform.co.uk")
       other_request = create(:request, source_id: SecureRandom.uuid)
 
-      results = Request.where(source_id: shared_id)
+      results = described_class.where(source_id: shared_id)
 
       expect(results).to include(request_1, request_2)
       expect(results).not_to include(other_request)
@@ -173,7 +173,7 @@ RSpec.describe Request, type: :model do
       newer_request = create(:request, source_app: source_app, source_id: source_id, created_at: Time.zone.now)
       _newer_non_source_request = create(:request, source_id: SecureRandom.uuid)
 
-      request = Request.most_recent_for_source(source_app:, source_id:)
+      request = described_class.most_recent_for_source(source_app:, source_id:)
 
       expect(request).to eq(newer_request)
     end
@@ -185,7 +185,7 @@ RSpec.describe Request, type: :model do
 
       create(:request, source_app: alt_source_app, source_id: source_id, created_at: Time.zone.now)
 
-      expect(Request.most_recent_for_source(source_app:, source_id:)).to be_nil
+      expect(described_class.most_recent_for_source(source_app:, source_id:)).to be_nil
     end
 
     it "returns nil if source_id is not matched" do
@@ -195,7 +195,7 @@ RSpec.describe Request, type: :model do
 
       create(:request, source_app: source_app, source_id: alt_source_id, created_at: Time.zone.now)
 
-      expect(Request.most_recent_for_source(source_app:, source_id:)).to be_nil
+      expect(described_class.most_recent_for_source(source_app:, source_id:)).to be_nil
     end
 
     it "returns nil if neither source_app or source_id is matched" do
@@ -206,7 +206,7 @@ RSpec.describe Request, type: :model do
 
       create(:request, source_app: alt_source_app, source_id: alt_source_id, created_at: Time.zone.now)
 
-      expect(Request.most_recent_for_source(source_app:, source_id:)).to be_nil
+      expect(described_class.most_recent_for_source(source_app:, source_id:)).to be_nil
     end
   end
 end

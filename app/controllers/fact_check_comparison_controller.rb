@@ -15,6 +15,7 @@ class FactCheckComparisonController < ApplicationController
 
     mark_current_content
     @differ = create_diff
+    @draft_url = draft_origin_preview_url(@request)
   end
 
 private

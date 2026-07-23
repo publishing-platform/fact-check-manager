@@ -1,0 +1,4 @@
+en:
+  fact_check_already_submitted:
+    heading: "Response already submitted"
+    fact_check_already_completed: "This fact check request has already been completed."
