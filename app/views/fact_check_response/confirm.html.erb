@@ -1,0 +1,59 @@
+<% content_for :browser_title, @request.source_title %>
+<% content_for :context, @request.source_title %>
+<% content_for :back_link, respond_path(source_app: @request.source_app, source_id: @request.source_id, back: :true) %>
+<% content_for :title, t("fact_check_confirm.heading") %>
+
+<% if @errors.present? %>
+  <%= render "publishing_platform_publishing_components/components/error_summary", {
+    title: t("fact_check_confirm.error_heading"),
+    items: @errors.map { |error| { text: error } },
+  } %> 
+<% end %>
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+    <%= form_with url: confirm_path(source_app: @request.source_app, source_id: @request.source_id),
+                  method: :post,
+                  scope: :fact_check_response do |f| %> 
+
+      <%= hidden_field_tag "fact_check_response[accepted]", @form_data[:accepted] %>
+      <%= hidden_field_tag "fact_check_response[body]", @form_data[:body] %>
+
+      <%= render "publishing_platform_publishing_components/components/summary_list", {
+        items: [
+          {
+            field: t("fact_check_confirm.confirm_changes"),
+            edit: {
+              href: respond_path(source_app: @request.source_app, source_id: @request.source_id, back: :true),
+              text: t("fact_check_confirm.change_link"),
+            },
+            value: @form_data[:accepted] == "true" ?
+              t("fact_check_response.correct") :
+              t("fact_check_response.incorrect"),
+          },
+          (@form_data[:accepted] == "false" ? {
+            field: t("fact_check_confirm.factual_errors"),
+            edit: {
+              href: respond_path(source_app: @request.source_app, source_id: @request.source_id, back: :true),
+              text: t("fact_check_confirm.change_link"),
+            },
+            value: simple_format(@form_data[:body]),
+          } : nil),
+        ].compact,        
+      } %>    
+
+      <h2 class="h4"><%= t("fact_check_confirm.send_response") %></h2>
+
+      <div class="alert alert-warning d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+          <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+        <div>
+          <%= t("fact_check_confirm.send_response_warning") %>
+        </div>
+      </div>
+
+      <%= submit_tag t("fact_check_confirm.confirm_button"), class: "btn btn-primary" %>   
+    <% end %>
+  </div>
+</div>

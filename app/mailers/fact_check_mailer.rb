@@ -13,4 +13,22 @@ class FactCheckMailer < ApplicationMailer
                      title: @request.source_title)
     mail(to: user.email, subject:)
   end
+
+  def response_accepted_email(user, response)
+    @user = user
+    @response = response
+
+    subject = I18n.t("fact_check_mailer.response_accepted_email.subject",
+                     title: @response.request.source_title)
+    mail(to: user.email, subject:)
+  end
+
+  def response_rejected_email(user, response)
+    @user = user
+    @response = response
+
+    subject = I18n.t("fact_check_mailer.response_rejected_email.subject",
+                     title: @response.request.source_title)
+    mail(to: user.email, subject:)
+  end
 end

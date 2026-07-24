@@ -1,0 +1,5 @@
+en:
+  fact_check_submitted:
+    fact_check_submitted: "Fact check submitted"
+    fact_check_description: "Your response has been sent"
+    sent_a_confirmation_email: "We have sent you a confirmation email."

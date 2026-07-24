@@ -2,3 +2,7 @@ en:
   fact_check_mailer:
     new_fact_check_request_email:
       subject: "Fact check required: %{title}"
+    response_accepted_email:
+      subject: "Fact check accepted: %{title}"
+    response_rejected_email:
+      subject: "Fact check rejected: %{title}"

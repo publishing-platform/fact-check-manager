@@ -28,7 +28,7 @@ private
   def check_already_responded
     return if @request.response.blank?
 
-    render "fact_check_already_submitted"
+    render "shared/fact_check_already_submitted"
   end
 
   def mark_current_content

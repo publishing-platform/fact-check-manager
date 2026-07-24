@@ -1,0 +1,13 @@
+<%
+  field ||= nil
+  id = "#{field}-error"
+  classes ||= ""
+  css_classes = %w(invalid-feedback)
+  css_classes << classes if classes
+%>
+
+<% if @errors&.has_key?(field) %>
+  <%= tag.div id: id, class: css_classes do %>
+    <%= @errors[field] %>
+  <% end %>
+<% end %>

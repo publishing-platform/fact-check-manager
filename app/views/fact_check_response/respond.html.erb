@@ -1,0 +1,62 @@
+<% content_for :browser_title, @request.source_title %>
+<% content_for :context, @request.source_title %>
+<% content_for :back_link, compare_path(source_app: @request.source_app, source_id: @request.source_id) %>
+<% content_for :title, t("fact_check_response.heading") %>
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+    <%= form_with url: validate_path(source_app: @request.source_app, source_id: @request.source_id),
+                  method: :post,
+                  scope: :fact_check_response do |f| %> 
+
+      <% 
+        accepted_error = @errors[:accepted].presence
+      %>
+
+      <%= field_set_tag nil, aria: { describedby: accepted_error ? "accepted-error" : nil }, class: "mb-3" do %>
+        <%= tag.div class: "form-check #{(accepted_error ? "is-invalid" : nil)}" do %>
+          <%= radio_button_tag "fact_check_response[accepted]", 
+              true,
+              @form_data[:accepted] == "true",
+              class: "form-check-input #{(accepted_error ? "is-invalid" : nil)}"  %>   
+              
+          <%= label_tag "fact_check_response_accepted_true", t("fact_check_response.correct"), class: "form-check-label" %>
+        <% end %>
+
+        <%= tag.div class: "form-check #{(accepted_error ? "is-invalid" : nil)}" do %>
+          <%= radio_button_tag "fact_check_response[accepted]", 
+              false,
+              @errors[:body].present? || @form_data[:accepted] == "false" ,
+              class: "form-check-input #{(accepted_error ? "is-invalid" : nil)}"  %>   
+              
+          <%= label_tag "fact_check_response_accepted_false", t("fact_check_response.incorrect"), class: "form-check-label" %>
+        <% end %>   
+
+        <%= render "components/error", {
+          field: :accepted
+        } %>          
+      <% end %>
+
+      <% 
+        body_error = @errors[:body].presence
+      %>      
+
+      <%= label_tag "fact_check_response_body", t("fact_check_response.factual_errors"), class: "form-label" %>
+      <%= text_area_tag "fact_check_response[body]",
+            @form_data&.dig(:body),
+            id: "fact_check_response_body",
+            rows: 18,
+            aria: { describedby: body_error ? "body-error" : nil },
+            class: "form-control mb-3 #{(body_error ? "is-invalid" : nil)}" %>               
+
+      
+      <%= render "components/error", {
+        field: :body,
+        classes: "mb-3"
+      } %>       
+
+      <%= submit_tag t("fact_check_response.continue_button"), class: "btn btn-primary" %>   
+
+    <% end %>   
+  </div>
+</div>

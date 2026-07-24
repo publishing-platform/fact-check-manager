@@ -1,0 +1,12 @@
+<% content_for :browser_title, t("fact_check_submitted.fact_check_submitted") %>
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+    <%= tag.div(class: "alert alert-success mb-3", role: "alert") do %>
+      <h1 class="alert-heading"><%= t("fact_check_submitted.fact_check_submitted") %></h1>
+      <p class="mb-0"><%= t("fact_check_submitted.fact_check_description") %></p>
+    <% end %>      
+
+    <p> <%= t("fact_check_submitted.sent_a_confirmation_email") %> </p>
+  </div>
+</div>
