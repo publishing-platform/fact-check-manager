@@ -13,4 +13,17 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    resources :requests, only: %i[create]
+
+    namespace :requests do
+      scope ":source_app" do
+        scope ":source_id" do
+          post "/resend-emails", to: "resend_emails"
+          patch "", to: "/api/requests#update", as: :update
+        end
+      end
+    end
+  end
 end

@@ -3,6 +3,8 @@ class Request < ApplicationRecord
   has_many :users, through: :collaborations
   has_one :response
 
+  attribute :auth_bypass_id, default: -> { SecureRandom.uuid }
+
   validates :source_id, :source_app, :requester_name, :requester_email, :status, :current_content, :deadline, presence: true
 
   validate :content_fields_are_correctly_structured
