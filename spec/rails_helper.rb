@@ -86,4 +86,5 @@ RSpec.configure do |config|
 
   config.include Capybara::RSpecMatchers, type: ->(spec) { spec.in?(%i[feature request]) }
   config.include ApiHelpers
+  config.include FormattedDiffHelpers, type: ->(spec) { spec.in?(%i[feature request]) }
 end
