@@ -16,7 +16,7 @@
   "dependencies": {
     "@publishing-platform/publishing-platform-publishing-components": "^0.9.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "rollup": "^4.60.4"    
+    "rollup": "^4.62.3"    
   },
   "devDependencies": {
     "standardx": "^7.0.0",
