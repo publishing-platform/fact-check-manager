@@ -308,7 +308,7 @@ GEM
       rails (>= 7)
       warden (~> 1.2)
       warden-oauth2 (~> 0.0.1)
-    publishing_platform_test (0.2.8)
+    publishing_platform_test (0.2.9)
       brakeman (>= 5.0.2)
       capybara (>= 3.36)
       puma
