@@ -6,7 +6,7 @@ gem "bootsnap", require: false
 gem "dartsass-rails"
 gem "jbuilder"
 gem "jsbundling-rails"
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.7"
 gem "publishing_platform_api_adapters"
 gem "publishing_platform_app_config"
 gem "publishing_platform_location"
